@@ -25,11 +25,11 @@ namespace AspNetCoreVideo.Controllers
             {
                 Id = video.Id,
                 Title = video.Title,
-                Genre = Enum.GetName(typeof(Genres), video.GenreId)
+                Genre = video.Genre.ToString()
             });
             return View(model);
         }
-
+        
         public IActionResult Details(int id)
         {
             var video = _videos.Get(id);
@@ -37,8 +37,26 @@ namespace AspNetCoreVideo.Controllers
             {
                 return RedirectToAction("Index");
             }
-            var model = new VideoViewModel { Id = video.Id, Title = video.Title, Genre = Enum.GetName(typeof(Genres), video.GenreId) };
+            var model = new VideoViewModel { Id = video.Id, Title = video.Title, Genre = video.Genre.ToString() };
             return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Create(VideoEditViewModel model)
+        {
+            var video = new Video
+            {
+                Title = model.Title,
+                Genre = model.Genre
+            };
+            _videos.Add(video);
+            return RedirectToAction("Details", new { id = video.Id });
         }
     }
 }

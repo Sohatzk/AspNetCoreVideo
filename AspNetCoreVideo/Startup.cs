@@ -30,7 +30,7 @@ namespace AspNetCoreVideo
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc(option => option.EnableEndpointRouting = false);
-            services.AddScoped<IVideoData, MockVideoData>();
+            services.AddSingleton<IVideoData, MockVideoData>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
