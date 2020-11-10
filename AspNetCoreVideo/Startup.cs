@@ -42,12 +42,20 @@ namespace AspNetCoreVideo
                 app.UseDeveloperExceptionPage();
             }
 
+
+            // HTTP error handling
+            app.UseStatusCodePagesWithReExecute("/error", "?code={0}");
+
+            app.Map("/error", ap => ap.Run(async context =>
+            {
+                await context.Response.WriteAsync($"Err: {context.Request.Query["code"]}");
+            }));
+
             app.UseFileServer();
 
-            app.UseMvc(route => 
-            route.MapRoute("Default", 
+            app.UseMvc(route =>
+            route.MapRoute("Default",
             "{controller=Home}/{action=Index}/{Id?}"));
-
 
             app.Run(async (context) =>
             {

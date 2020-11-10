@@ -1,8 +1,7 @@
-﻿using AspNetCoreVideo.Models;
-using System;
+﻿using AspNetCoreVideo.Entities;
+using AspNetCoreVideo.Models;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace AspNetCoreVideo.Services
 {
@@ -14,14 +13,19 @@ namespace AspNetCoreVideo.Services
         {
             _videos = new List<Video>()
             {
-                new Video { Id = 1, Title = "Shrek" },
-                new Video { Id = 2, Title = "Berserker" },
-                new Video { Id = 3, Title = "Taxi driver" },
+                new Video { Id = 1, Title = "Shrek", GenreId = 6 },
+                new Video { Id = 2, Title = "Berserker", GenreId = 1 },
+                new Video { Id = 3, Title = "Taxi driver", GenreId = 5 },
             };
         }
         public IEnumerable<Video> GetAll()
         {
             return _videos;
+        }
+
+        public Video Get(int id)
+        {
+            return _videos.FirstOrDefault(video => video.Id.Equals(id));
         }
     }
 }
