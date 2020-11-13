@@ -40,14 +40,18 @@ namespace AspNetCoreVideo
             var conn = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<VideoDbContext>(options =>
             options.UseSqlServer(conn));
-            //services.AddSingleton(provider => Configuration);
+            services.AddSingleton(provider => Configuration);
             services.AddMvc(option => option.EnableEndpointRouting = false);
+            //services.AddSingleton<IMessageService, HardCodedMessageService>();
+            services.AddSingleton(provider => Configuration);
+            services.AddSingleton<IMessageService,
+            ConfigurationMessageService>();
             services.AddScoped<IVideoData, SqlVideoData>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostEnvironment env,
-        ILoggerFactory loggerFactory)
+        ILoggerFactory loggerFactory, IMessageService mes)
         {
             if (env.IsDevelopment())
             {
@@ -63,7 +67,7 @@ namespace AspNetCoreVideo
                 await context.Response.WriteAsync($"Err: {context.Request.Query["code"]}");
             }));
 
-            app.UseFileServer();
+            // app.UseFileServer();
 
             app.UseMvc(route =>
             route.MapRoute("Default",
@@ -71,7 +75,7 @@ namespace AspNetCoreVideo
 
             app.Run(async (context) =>
             {
-                await context.Response.WriteAsync("Hello World");
+                await context.Response.WriteAsync(mes.GetMessage());
             });
         }
 
